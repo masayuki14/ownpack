@@ -1,4 +1,32 @@
 Ownpack::Application.routes.draw do
+
+  get 'sessions/callback'
+  get 'sessions/destroy'
+
+  match '/auth/:provider/callback' => 'sessions#callback'
+  match '/logout' => 'sessions#destroy', :as => :logout
+
+  get 'welcome/index'
+  get 'welcome/list'
+  get 'welcome/hello'
+  match '/' => 'welcome#index'
+
+  resources :recipes do
+    resources :steps do
+      get  'move_lower' => 'steps#move_lower'
+      get  'move_higher' => 'steps#move_higher'
+      put  'upload_photo' => 'steps#upload_photo'
+      post 'add' => 'steps#add'
+    end
+    collection do
+      get 'list/:user_id' => 'recipes#list', :as => :list
+    end
+    member do
+      put 'publish'
+      put 'withdraw'
+    end
+  end
+
   # The priority is based upon order of creation:
   # first created -> highest priority.
 

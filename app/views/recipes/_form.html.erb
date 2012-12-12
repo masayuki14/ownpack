@@ -1,0 +1,75 @@
+<%= form_for(@recipe, :html => {:class => 'form-horizontal'}) do |f| %>
+  <% if @recipe.errors.any? %>
+    <div class="alert alert-block alert-error">
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+      <h4><%= pluralize(@recipe.errors.count, "error") %> prohibited this recipe from being saved:</h4>
+
+      <ul>
+      <% @recipe.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="control-group<%= @recipe.errors.messages.has_key?(:title) ? ' error' : '' %>">
+    <label class="control-label">
+      レシピのタイトル
+    </label>
+    <div class="controls">
+      <%= f.text_field :title, placeholder: 'タイトルを入力(20文字)' %>
+    </div>
+  </div>
+
+  <div class="control-group<%= @recipe.errors.messages.has_key?(:uploaded_picture) ? ' error' : '' %>">
+    <label class="control-label">
+       完成写真をのせる
+    </label>
+    <div class="controls">
+      <%= f.file_field :uploaded_picture %>
+    </div>
+  </div>
+
+  <div class="control-group<%= @recipe.errors.messages.has_key?(:catch_copy) ? ' error' : '' %>">
+    <label class="control-label">
+      キャッチコピー
+    </label>
+    <div class="controls">
+      <%= f.text_field :catch_copy, placeholder: 'キャッチコピーをのせる(60文字)' %>
+    </div>
+  </div>
+
+  <div class="control-group<%= @recipe.errors.messages.has_key?(:history) ? ' error' : '' %>">
+    <label class="control-label">
+      レシピのおいたち
+    </label>
+    <div class="controls">
+      <%= f.text_area :history, cols: 5, rows: 5, placeholder: 'このレシピの生い立ちをのせる(120文字)' %>
+    </div>
+  </div>
+
+  <div class="control-group<%= @recipe.errors.messages.has_key?(:knack) ? ' error' : '' %>">
+    <label class="control-label">
+      うまく作るコツ
+    </label>
+    <div class="controls">
+      <%= f.text_area :knack, rows: 5, placeholder: 'うまく作るコツ・ポイントをのせる(120文字)' %>
+    </div>
+  </div>
+
+  <div class="control-group<%= @recipe.errors.messages.has_key?(:time_required) ? ' error' : '' %>">
+    <label class="control-label">
+      所要時間
+    </label>
+    <div class="controls">
+      約<%= f.select :time_required, [5, 10, 15, 20, 25, 30], {}, class: 'span1' %> 分
+    </div>
+  </div>
+
+  <div class="control-group">
+    <div class="controls">
+      <%= f.submit class: 'btn' %>
+    </div>
+  </div>
+
+<% end %>

@@ -1,0 +1,22 @@
+<% recipe.steps.each do |step| %>
+  <div class="span3" id="step<%= step.id %>">
+    <h2>Step<%= step.step_order %></h2>
+    <p>
+      <%= link_to '削除', recipe_step_url(recipe, step), :method => :delete, :remote => true %>
+      <%= link_to '追加', recipe_step_add_url(recipe, step), :method => :post, :remote => true %>
+    </p>
+    <p>写真をのせる</p>
+    <p>クリックして作り方を入力</p>
+    <p><%= image_tag step.filepath, :width => '200px' %></p>
+    <p><%= step.memo %></p>
+    <%= form_for([recipe, step], :url => recipe_step_upload_photo_url(recipe, step), :html => {:multipart => true, :method => :put}) do |f| %>
+      <%= f.file_field :uploaded_picture %>
+      <%= f.submit '保存' %>
+    <% end %>
+    <%= form_for([recipe, step], :html => {:method => :put}) do |f| %>
+      <%= f.text_area :memo, :rows => 3, :style => 'width: 200px' %>
+      <%= f.submit '保存' %>
+    <% end %>
+  </div><!--/span-->
+<% end %>
+

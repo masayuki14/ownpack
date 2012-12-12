@@ -1,0 +1,24 @@
+          <div class="well sidebar-nav">
+            <ul class="nav nav-list">
+            <% if @current_user.blank? %>
+              <li><%= link_to 'Sign in width: Twitter', '/auth/twitter/' %></li>
+              <li><%= link_to 'Sign in width: Facebook', '/auth/twitter/' %></li>
+            <% else %>
+              <li><%= link_to 'レシピをのせる', :controller => 'recipes', :action => 'new' %></li>
+              <li class="nav-header">Sidebar</li>
+              <li><%= link_to '公開レシピ', list_recipes_url(@current_user.id) %></li>
+              <li><%= link_to '下書きレシピ', list_recipes_url(@current_user.id, :mode => Recipe::MODE_DRAFT) %></li>
+            <% end %>
+              <li><%= link_to "Link3", "/path1"  %></li>
+              <li class="nav-header">Sidebar</li>
+              <li><a href="#">Link</a></li>
+              <li><a href="#">Link</a></li>
+              <li class="active"><a href="#">Link</a></li>
+              <li><a href="#">Link</a></li>
+              <li><a href="#">Link</a></li>
+              <li class="nav-header">Sidebar</li>
+              <li><a href="#">Link</a></li>
+              <li><a href="#">Link</a></li>
+              <li><a href="#">Link</a></li>
+            </ul>
+          </div><!--/.well -->
