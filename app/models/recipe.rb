@@ -2,7 +2,8 @@ require 'digest/md5'
 
 class Recipe < ActiveRecord::Base
   MODE_DRAFT = 'draft'
-  attr_accessible :catch_copy, :history, :knack, :time_required, :title, :user_id, :filepath, :uploaded_picture
+  attr_accessible :catch_copy, :history, :knack, :time_required, :title, :user_id, :filepath
+  attr_accessible :uploaded_picture
   belongs_to :user
   has_many :steps
 
@@ -40,32 +41,21 @@ class Recipe < ActiveRecord::Base
 
 private
 
+  # ID+timestampでMD5ハッシュをとり、前2文字をディレクトリ名、それ以降をファイル名とする
   def set_filepath
-    self.filepath = File.join(dir_path, filename) if self.filepath.blank?
+    return if @uploaded_picture.blank?
+    filename = Digest::MD5.hexdigest("#{self.id}#{Time.new.to_f}").insert(2, '/') + '.' + @extension
+    self.filepath = File.join(Ownpack::Application.config.upload_dir, filename)
   end
+
 
   #== 画像ファイルを保存する
   def write_uploaded_picture
     return if @uploaded_picture.blank?
-    return if @uploaded_picture.size == 0
-
-    make_dir
-    File.open(File.join(Tutorial::Application.config.upload_image_root, self.filepath), 'wb') do |fp|
+    pathname = Ownpack::Application.config.upload_image_root + File.dirname(self.filepath)
+    pathname.mkdir unless pathname.exist?
+    File.open(File.join(Ownpack::Application.config.upload_image_root, self.filepath), 'wb') do |fp|
       fp.write(File.read(@uploaded_picture.path))
     end
   end
-
-  def dir_path
-    File.join(Tutorial::Application.config.upload_dir, self.user_id.to_s)
-  end
-
-  def make_dir
-    pathname = Tutorial::Application.config.upload_image_root + dir_path
-    pathname.mkdir unless pathname.exist?
-  end
-
-  def filename
-    Digest::MD5.hexdigest("#{self.id}#{Time.new.to_f}") + '.' + @extension
-  end
-
 end
