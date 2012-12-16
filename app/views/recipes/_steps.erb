@@ -1,22 +1,37 @@
-<% recipe.steps.each do |step| %>
-  <div class="span3" id="step<%= step.id %>">
-    <h2>Step<%= step.step_order %></h2>
-    <p>
-      <%= link_to '削除', recipe_step_url(recipe, step), :method => :delete, :remote => true %>
-      <%= link_to '追加', recipe_step_add_url(recipe, step), :method => :post, :remote => true %>
-    </p>
-    <p>写真をのせる</p>
-    <p>クリックして作り方を入力</p>
-    <p><%= image_tag step.filepath, :width => '200px' %></p>
-    <p><%= step.memo %></p>
-    <%= form_for([recipe, step], :url => recipe_step_upload_photo_url(recipe, step), :html => {:multipart => true, :method => :put}) do |f| %>
-      <%= f.file_field :uploaded_picture %>
-      <%= f.submit '保存' %>
-    <% end %>
-    <%= form_for([recipe, step], :html => {:method => :put}) do |f| %>
-      <%= f.text_area :memo, :rows => 3, :style => 'width: 200px' %>
-      <%= f.submit '保存' %>
-    <% end %>
-  </div><!--/span-->
+<%
+  count = 0
+  per = 4
+  open = false
+%>
+<% recipe.steps.order(:step_order).each do |step| %>
+  <% if count % per == 0 and !open %> <% open = true %>
+  <div class="row-fluid">
+  <% end %>
+    <div class="span3" id="step<%= step.id %>">
+      <h2>Step<%= step.step_order %></h2>
+      <p>
+        <%= link_to '&larr;'.html_safe, recipe_step_move_lower_url(recipe, step), :method => :put, :remote => true %>
+        <%= link_to '&rarr;'.html_safe, recipe_step_move_higher_url(recipe, step), :method => :put, :remote => true %>
+        |
+        <%= link_to '削除', recipe_step_url(recipe, step), :method => :delete, :remote => true %>
+        <%= link_to '追加', recipe_step_add_url(recipe, step), :method => :post, :remote => true %>
+      </p>
+      <p>写真をのせる</p>
+      <p>クリックして作り方を入力</p>
+      <p><%= image_tag step.filepath, :width => '200px' %></p>
+      <p><%= step.memo %></p>
+      <%= form_for([recipe, step], :url => recipe_step_upload_photo_url(recipe, step), :html => {:multipart => true, :method => :put}) do |f| %>
+        <%= f.file_field :uploaded_picture %>
+        <%= f.submit '保存' %>
+      <% end %>
+      <%= form_for([recipe, step], :html => {:method => :put}) do |f| %>
+        <%= f.text_area :memo, :rows => 3, :style => 'width: 200px' %>
+        <%= f.submit '保存' %>
+      <% end %>
+    </div><!--/span-->
+  <% if count % per == per - 1 and open %> <% open = false %>
+  </div><!-- /row-fluid -->
+  <% end %>
+  <% count += 1 %>
 <% end %>
-
+<% if open %></div><!-- /row-fluid --><% end %>

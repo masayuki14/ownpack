@@ -13,8 +13,8 @@ Ownpack::Application.routes.draw do
 
   resources :recipes do
     resources :steps do
-      get  'move_lower' => 'steps#move_lower'
-      get  'move_higher' => 'steps#move_higher'
+      put  'move_lower' => 'steps#move_lower'
+      put  'move_higher' => 'steps#move_higher'
       put  'upload_photo' => 'steps#upload_photo'
       post 'add' => 'steps#add'
     end
